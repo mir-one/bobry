@@ -18,7 +18,7 @@ genesis-generator
   initial-balance: 10000000000000000  #Общее число актива (здесь указано 8 десятичных знаков )
   base-target: 153722867
   average-block-delay: 60s #Интервал генерации блоков
-  timestamp: 1500635421931 #закомментите этот параметр, чтобы использовать время запуска сети
+  timestamp: 1500635421931 #закомментируйте этот параметр, чтобы использовать время запуска сети
 
   # seed text -> share
   # the sum of shares should be <= initial-balance
