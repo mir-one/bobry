@@ -5,16 +5,20 @@
 Установите git, Java 8 и sbt.
 Clone репозиторий через git clone (address):
 
-Отредактируйте параметры генезиса сети src/test/resources/genesis.example.conf, для примера используйте это:
+'''
+https://github.com/mir-one/bobry.git
+'''
+
+Отредактируйте параметры параметры конфигуратора генезиса сети src/test/resources/genesis.example.conf, для примера используйте это:
 
 ```
 genesis-generator
 {
-  network-type: "L"  #your custom network identifier byte
-  initial-balance: 10000000000000000  #initial balance in wavelets
-  base-target: 153722867  #the initial complexity parameter
-  average-block-delay: 60s #average block delay
-  timestamp: 1500635421931 #comment this to use the current time
+  network-type: "L"  #Байт идентификатор вашей сети
+  initial-balance: 10000000000000000  #Общее число актива (здесь указано 8 десятичных знаков )
+  base-target: 153722867
+  average-block-delay: 60s #Интервал генерации блоков
+  timestamp: 1500635421931 #закомментите этот параметр, чтобы использовать время запуска сети
 
   # seed text -> share
   # the sum of shares should be <= initial-balance
@@ -25,8 +29,14 @@ genesis-generator
 }
 ```
 
-Fourth Step
-Run the genesis block generator using sbt "test:runMain tools.GenesisBlockGenerator src/test/resources/genesis.example.conf" , Results will be like this:
+Запустите генерацию genesis, блока вашей сети, используя:
+
+```
+sbt "test:runMain tools.GenesisBlockGenerator src/test/resources/genesis.example.conf"
+```
+
+Результат будет примерно такой
+```
 Addresses:
 (0):
  Seed text:           foo0
@@ -45,10 +55,13 @@ genesis {
   signature: "4xpkFL6TdaEwqZnDcuMVSei77rR5S8EpsEr3dkFMNoDCtxxhBVQCbzkeGwKLdyT5zcPumpNnqgybb3qeLV5QtEKv"
   initial-balance: 10000000000000000
   transactions = [{recipient: "3JfE6tjeT7PnpuDQKxiVNLn4TJUFhuMaaT5", amount: 10000000000000}]}
-Fifth Step
-Open your favorite text editor and create waves-custom-network.conf (or any other name) file like this:
-# Waves node settings
-waves
+  ```
+
+Создайте network.conf (илидругое имя) и вставьте это содержимое:
+
+```
+# Network node settings
+network
 {
   # data storage folder
   directory=/tmp/custom
@@ -125,15 +138,9 @@ waves
     quorum = 0
   }
 }
-Pay attention to the parameters waves.blockchain.custom.address-scheme-character and waves.blockchain.custom.genesis, they was copied from the result and settings of genesis generator tool. Also look at waves.wallet.seed value, this value can be copied from "Seed" value for one of genesis addresses from the result of genesis generator tool.
+```
 
-Sixth Step
-Start your custom network node with sbt "run waves-custom-network.conf" Also you can run already builded release package (deb or jar) with this configuration file manually.
-Done! You create your private Waves network consisting of one node!
+Запустите сеть
 
-Adding Nodes to Your Network
-You can add more nodes to your network using waves.network.known-peers parameter, specify the address and port of the existing node with the same network parameters like "127.0.0.1:6860". If you are making several nodes locally, then do not forget to change for the new nodes the network port waves.network.port, the API port waves.rest-api.port, folder for the data waves.directory and wallet seed waves.wallet.seed.
-
-waves.blockchain.custom.functionality section contains parameters that allow you to enable and disable some features in your blockchain system.
-
-Note. the developers can add new parameters in waves.blockchain.custom.functionality section, which are not present in this example; for an example of a working configuration, you can look at the waves-devnet.conf file in root folder of repository.
+```
+sbt 'run network.conf'
